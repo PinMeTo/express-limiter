@@ -2,18 +2,23 @@ module.exports = function (app, db) {
   return function (opts) {
     var middleware = function (req, res, next) {
       if (opts.whitelist && opts.whitelist(req)) return next()
-      opts.lookup = Array.isArray(opts.lookup) ? opts.lookup : [opts.lookup]
       opts.onRateLimited = typeof opts.onRateLimited === 'function' ? opts.onRateLimited : function (req, res, next) {
         res.status(429).send('Rate limit exceeded')
       }
-      var lookups = opts.lookup.map(function (item) {
-        return item + ':' + item.split('.').reduce(function (prev, cur) {
-          return prev[cur]
-        }, req)
-      }).join(':')
-      var path = opts.path || req.path
-      var method = (opts.method || req.method).toLowerCase()
-      var key = 'ratelimit:' + path + ':' + method + ':' + lookups
+      var key
+      if (opts.staticLookup) {
+        key = opts.staticLookup
+      } else {
+        opts.lookup = Array.isArray(opts.lookup) ? opts.lookup : [opts.lookup]
+        var lookups = opts.lookup.map(function (item) {
+          return item + ':' + item.split('.').reduce(function (prev, cur) {
+            return prev[cur]
+          }, req)
+        }).join(':')
+        var path = opts.path || req.path
+        var method = (opts.method || req.method).toLowerCase()
+        key = 'ratelimit:' + path + ':' + method + ':' + lookups
+      }
       db.get(key, function (err, limit) {
         if (err && opts.ignoreErrors) return next()
         var now = Date.now()
