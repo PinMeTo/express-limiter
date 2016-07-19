@@ -36,7 +36,7 @@ module.exports = function (app, db) {
             res.set('X-RateLimit-Reset', Math.ceil(limit.reset / 1000)) // UTC epoch seconds
             res.set('X-RateLimit-Remaining', Math.max(limit.remaining,0))
           }
-
+          req.remaining = limit.remaining;
           if (limit.remaining >= 0) return next()
 
           var after = (limit.reset - Date.now()) / 1000
