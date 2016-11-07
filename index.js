@@ -31,6 +31,7 @@ module.exports = function (app, db) {
         if (now > limit.reset) {
           limit.reset = now + opts.expire
           limit.remaining = opts.total
+          limit.total = opts.total
         }
 
         // do not allow negative remaining
