@@ -17,14 +17,14 @@
   },
   "homepage": "https://github.com/ded/express-limiter",
   "devDependencies": {
-    "express": "4.0.0",
-    "redis": "~0.10.1",
-    "mocha": "~1.18.2",
-    "chai": "~1.9.1",
-    "sinon": "~1.9.0",
-    "sinon-chai": "~2.5.0",
-    "supertest": "~0.10.0",
-    "valentine": "~2.0.2",
-    "jshint": "~2.5.0"
+    "express": "~4.17.1",
+    "redis": "~2.8.0",
+    "mocha": "~3.5.3",
+    "chai": "~4.2.0",
+    "sinon": "~8.0.4",
+    "sinon-chai": "~3.4.0",
+    "supertest": "~4.0.2",
+    "valentine": "~2.1.4",
+    "jshint": "~2.11.0"
   }
 }
