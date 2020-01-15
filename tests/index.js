@@ -1,14 +1,19 @@
-var chai = require('chai')
-  , request = require('supertest')
-  , sinon = require('sinon')
-  , redis = require('redis').createClient()
-  , v = require('valentine')
-  , subject = require('../')
+const
+  chai = require('chai'),
+  request = require('supertest'),
+  sinon = require('sinon'),
+  redis = require('redis').createClient(),
+  v = require('valentine'),
+  subject = require('../')
 
 chai.use(require('sinon-chai'))
 
 describe('rate-limiter', function() {
   var express, app, limiter
+
+  after(function() {
+    redis.quit()
+  })
 
   beforeEach(function() {
     express = require('express')
@@ -33,7 +38,7 @@ describe('rate-limiter', function() {
     })
 
     app.get('/route', function(req, res) {
-      res.send(200, 'hello')
+      res.status(200).send('hello')
     })
 
     var out = (map).map(function(item) {
@@ -85,7 +90,7 @@ describe('rate-limiter', function() {
       })
 
       app.get('/route', function(req, res) {
-        res.send(200, 'hello')
+        res.status(200).send('hello')
       })
 
       request(app)
@@ -113,7 +118,7 @@ describe('rate-limiter', function() {
       })
 
       app.get('/route', function(req, res) {
-        res.send(200, 'hello')
+        res.status(200).send('hello')
       })
 
       var stub = sinon.stub(redis, 'get').callsFake(function(key, callback) {
@@ -142,7 +147,7 @@ describe('rate-limiter', function() {
       })
 
       app.get('/route', function(req, res) {
-        res.send(200, 'hello')
+        res.status(200).send('hello')
       })
 
       request(app)
@@ -165,7 +170,7 @@ describe('rate-limiter', function() {
         expire: 1000 * 60 * 60
       })
       app.get('/direct', middleware, function(req, res, next) {
-        res.send(200, 'is direct')
+        res.status(200).send('is direct')
       })
       v.waterfall(
         function(f) {

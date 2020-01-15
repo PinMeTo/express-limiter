@@ -29,7 +29,7 @@ limiter({
 })
 
 app.get('/api/action', function (req, res) {
-  res.send(200, 'ok')
+  res.status(200).send( 'ok')
 })
 ```
 
